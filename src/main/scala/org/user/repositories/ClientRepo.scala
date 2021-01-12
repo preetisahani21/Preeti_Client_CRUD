@@ -7,9 +7,11 @@ import org.mongodb.scala.{Completed, MongoCollection}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Filters.equal
 import org.mongodb.scala.model.FindOneAndUpdateOptions
+import org.mongodb.scala.model.Sorts.ascending
 import org.mongodb.scala.model.Updates.{combine, set}
 import org.mongodb.scala.result.DeleteResult
 import org.utils.JsonUtils
+
 import scala.concurrent.Future
 
 
@@ -34,7 +36,7 @@ object ClientRepo extends JsonUtils {
   }
 
   def findSome(pageNumber: Int, messagesPerPage: Int): Future[Seq[Client]] = {
-    clientDoc.find().skip((pageNumber - 1) * messagesPerPage).limit(messagesPerPage).toFuture()
+    clientDoc.find().skip((pageNumber - 1) * messagesPerPage).limit(messagesPerPage).sort(ascending("name")).toFuture()
   }
 
   def update(cl: Client, id: String): Future[Client] = {
